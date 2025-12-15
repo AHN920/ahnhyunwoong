@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatGPT처럼 유니티 게임 개발</title>
+    <title>ChatGPT처럼 유니티 게임 개발 | 포트폴리오</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Dark Mode Hybrid (Slate/Emerald) -->
-    <!-- Application Structure Plan: The SPA mimics a GitHub project repository page. It features a central content area with a developer profile and a detailed project overview (ReadMe style). The most complex information (Core Architecture) is presented as an interactive, multi-step flow diagram. The Roadmap is presented using toggleable cards for clarity. This structure is chosen to feel familiar to technical users while providing necessary depth and interactive explanation for the core AI pipeline. Key interactions include section navigation and step-by-step detail reveal in the architecture section. -->
-    <!-- Visualization & Content Choices: 1. Developer Info: Presented as a dedicated profile card. 2. Project Flow (Core Architecture): Presented as a sequential, HTML/CSS flex diagram with interactive steps. Clicking a step reveals its detailed function (e.g., JSON Schema generation). This replaces complex text with an accessible visual flow. (Interaction: JS reveal). 3. Roadmap: Presented as collapsible/toggleable cards to manage vertical space and allow focused reading. (Interaction: JS toggle). NO charts, SVG, or Mermaid are used as the content is architectural and descriptive. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
@@ -63,6 +61,42 @@
                 margin: 1rem 0;
             }
         }
+
+        /* Simple modal (no external libs) */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.75); /* slate-900 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            padding: 1rem;
+        }
+        .modal-overlay[hidden] { display: none; }
+        .modal-card {
+            width: min(1100px, 100%);
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+            border: 1px solid #e2e8f0;
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            background: #0f172a; /* slate-900 */
+            color: white;
+        }
+        .modal-body { padding: 1rem; background: #0b1220; }
+        .thumb {
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+        }
     </style>
 </head>
 <body>
@@ -75,16 +109,21 @@
                     <span class="font-mono">{AHW}</span> / ChatUniAI
                 </span>
                 <nav class="hidden sm:flex space-x-6 text-sm">
+                    <a href="#showcase" class="hover:text-emerald-400 transition-colors">포트폴리오</a>
                     <a href="#about" class="hover:text-emerald-400 transition-colors">프로젝트 소개</a>
+                    <a href="#demo" class="hover:text-emerald-400 transition-colors">시연영상</a>
+                    <a href="#presentation" class="hover:text-emerald-400 transition-colors">발표자료</a>
                     <a href="#architecture" class="hover:text-emerald-400 transition-colors">핵심 아키텍처</a>
+                    <a href="#tech" class="hover:text-emerald-400 transition-colors">기술 스택</a>
                     <a href="#roadmap" class="hover:text-emerald-400 transition-colors">로드맵</a>
                 </nav>
             </div>
-            <button class="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg text-sm shadow-md transition-colors">
+            <a href="https://github.com/ahn920/ahnhyunwoong" target="_blank" rel="noopener"
+               class="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg text-sm shadow-md transition-colors">
                 <div class="flex items-center">
-                    <span class="mr-2">★</span> Star
+                    <span class="mr-2">★</span> GitHub
                 </div>
-            </button>
+            </a>
         </div>
     </header>
 
@@ -93,7 +132,7 @@
 
         <!-- Left Sidebar (Profile & Stats) -->
         <aside class="lg:col-span-1 space-y-6">
-            
+
             <!-- Project Stats Card -->
             <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
                 <h2 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">프로젝트 현황</h2>
@@ -107,11 +146,20 @@
                         <span class="font-mono font-semibold text-slate-700">2025.11.10</span>
                     </div>
                 </div>
-                <button class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition-colors shadow-md">
-                    <div class="flex items-center justify-center">
-                        <span class="mr-2">🚀</span> Run Prototype (Simulated)
-                    </div>
-                </button>
+
+                <div class="grid grid-cols-1 gap-2 mt-4">
+                    <button id="open-demo-btn"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition-colors shadow-md">
+                        <div class="flex items-center justify-center">
+                            <span class="mr-2">▶</span> 데모 영상 보기
+                        </div>
+                    </button>
+                    <a href="assets/presentation.pdf" target="_blank" rel="noopener"
+                       class="w-full bg-slate-900 hover:bg-slate-950 text-white font-bold py-2 rounded-lg transition-colors shadow-md text-center">
+                        <span class="mr-2">📄</span> 발표자료(PDF) 열기
+                    </a>
+                </div>
+                
             </div>
 
             <!-- Developer Profile Card -->
@@ -124,37 +172,206 @@
                         <p class="text-sm text-slate-500">AI를 활용한 게임 개발자</p>
                     </div>
                 </div>
-                <p class="text-sm text-slate-700 mt-4">
-                    안녕하세요 이번에 생성형 AI 로 게임 제작을 맡게 된 안현웅이라고 합니다. AI는 인간의 편리성을 위해 제작되었으며 그 것을 활용해 이번엔 프롬프트를 입력하고 본인이 원하는 게임을 아이디어를 활용해 게임을 AI로 제작할 수 있겠끔 만들려고 합니다.
+                <p class="text-sm text-slate-700 mt-4 leading-relaxed">
+                    안녕하세요. 생성형 AI로 게임 제작을 지원하는 <span class="font-semibold">유니티 AI 채팅 개발 시스템(ChatUniAI)</span>을 개발했습니다.
+                    사용자가 프롬프트를 입력하면, 필요한 스크립트와 씬 구성 요소를 자동 생성하여 빠르게 프로토타입을 만드는 것을 목표로 합니다.
                 </p>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                <h2 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">바로가기</h2>
+                <div class="space-y-2 text-sm">
+                    <a class="block px-3 py-2 rounded-lg bg-slate-50 hover:bg-slate-100" href="#showcase">📌 포트폴리오 요약</a>
+                    <a class="block px-3 py-2 rounded-lg bg-slate-50 hover:bg-slate-100" href="#demo">🎬 시연영상</a>
+                    <a class="block px-3 py-2 rounded-lg bg-slate-50 hover:bg-slate-100" href="#presentation">🧾 발표자료</a>
+                    <a class="block px-3 py-2 rounded-lg bg-slate-50 hover:bg-slate-100" href="#architecture">🧩 핵심 아키텍처</a>
+                    <a class="block px-3 py-2 rounded-lg bg-slate-50 hover:bg-slate-100" href="#roadmap">🗺️ 로드맵</a>
+                </div>
             </div>
         </aside>
 
         <!-- Main Content Area -->
         <main class="lg:col-span-3 space-y-10">
 
+            <!-- 0. 포트폴리오 요약 -->
+            <section id="showcase" class="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
+                <div class="flex items-start justify-between gap-4 flex-wrap">
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-800">포트폴리오 요약</h1>
+                        <p class="text-slate-600 mt-2 leading-relaxed">
+                            “아이디어 → 구조화(JSON) → 스크립트(C#) → Unity 씬 적용” 흐름을 하나의 파이프라인으로 묶어,
+                            게임 프로토타입 제작 속도를 높이는 AI 보조 시스템입니다.
+                        </p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="open-demo-btn-2"
+                                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg shadow-md">
+                            ▶ 데모 보기
+                        </button>
+                        <a href="assets/presentation.pdf" target="_blank" rel="noopener"
+                           class="bg-slate-900 hover:bg-slate-950 text-white font-semibold px-4 py-2 rounded-lg shadow-md">
+                            📄 발표자료
+                        </a>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-4 mt-6">
+                    <div class="p-5 rounded-xl border border-slate-200 bg-slate-50">
+                        <h3 class="font-bold text-slate-800 mb-2">문제</h3>
+                        <ul class="list-disc list-inside text-sm text-slate-700 space-y-1">
+                            <li>1인/소규모 개발에서 역할 부담</li>
+                            <li>반복 작업(템플릿·정리·디버그)에 시간 소모</li>
+                            <li>창의적 설계에 집중하기 어려움</li>
+                        </ul>
+                    </div>
+                    <div class="p-5 rounded-xl border border-slate-200 bg-slate-50">
+                        <h3 class="font-bold text-slate-800 mb-2">해결</h3>
+                        <ul class="list-disc list-inside text-sm text-slate-700 space-y-1">
+                            <li>프롬프트를 JSON 스키마로 구조화</li>
+                            <li>Unity용 C# 코드 자동 생성</li>
+                            <li>에디터에서 자동 적용(오브젝트 생성/컴포넌트 부착)</li>
+                        </ul>
+                    </div>
+                    <div class="p-5 rounded-xl border border-slate-200 bg-slate-50">
+                        <h3 class="font-bold text-slate-800 mb-2">기대 효과</h3>
+                        <ul class="list-disc list-inside text-sm text-slate-700 space-y-1">
+                            <li>개발 시간 단축</li>
+                            <li>창의적 업무 집중도 향상</li>
+                            <li>생산성 및 협업 효율 증대</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
             <!-- 1. 프로젝트 소개 (README) -->
             <section id="about" class="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
-                <h1 class="text-2xl font-bold text-slate-800 mb-4 border-b pb-2">프로젝트 소개 (README.md)</h1>
-                <h2 class="text-xl font-semibold text-emerald-600 mb-3"># ChatGPT처럼 유니티 게임 개발</h2>
-                
+                <h2 class="text-2xl font-bold text-slate-800 mb-4 border-b pb-2">프로젝트 소개 (README.md)</h2>
+                <h3 class="text-xl font-semibold text-emerald-600 mb-3"># ChatGPT처럼 유니티 게임 개발</h3>
+
                 <p class="text-slate-700 leading-relaxed mb-6">
-                    이 프로젝트는 생성형 AI 기술이 게임 개발 과정에 얼마나 혁신적으로 개입할 수 있는지 실증적으로 보여주는 것을 목표로 합니다. 단순한 스크립트 생성을 넘어, 사용자의 아이디어를 구조화된 데이터와 유니티 컴포넌트로 즉시 변환하여 게임 프로토타입을 제작하는 전 과정을 자동화하고자 합니다. 이 실험을 통해 미래 AI가 구현할 수 있는 영역을 직접 탐색하고 시연합니다.
+                    이 프로젝트는 생성형 AI 기술이 게임 개발 과정에 얼마나 혁신적으로 개입할 수 있는지 실증적으로 보여주는 것을 목표로 합니다.
+                    단순한 스크립트 생성을 넘어, 사용자의 아이디어를 구조화된 데이터와 유니티 컴포넌트로 즉시 변환하여 게임 프로토타입을 제작하는
+                    전 과정을 자동화하고자 합니다.
                 </p>
 
-                <h3 class="text-lg font-semibold text-slate-700 mt-6 mb-3 border-b pb-1">주요 목표</h3>
+                <h4 class="text-lg font-semibold text-slate-700 mt-6 mb-3 border-b pb-1">주요 목표</h4>
                 <ul class="list-disc list-inside space-y-2 text-slate-700">
-                    <li>자연어 프롬프트를 정확한 Unity C# 스크립트로 변환하는 AI 파이프라인 구축.</li>
-                    <li>Unity 에디터 내에서 AI 기능을 사용할 수 있는 커스텀 UI/UX 개발.</li>
-                    <li>AI 기술의 뛰어난 잠재력과 구현 가능성 입증.</li>
+                    <li>자연어 프롬프트를 정확한 Unity C# 스크립트로 변환하는 AI 파이프라인 구축</li>
+                    <li>Unity 에디터 내에서 AI 기능을 사용할 수 있는 커스텀 UI/UX 개발</li>
+                    <li>AI 기술의 잠재력과 구현 가능성 입증</li>
                 </ul>
             </section>
-            
-            <!-- 2. 핵심 아키텍처 -->
+
+            <!-- 2. 시연 영상 -->
+            <section id="demo" class="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
+                <div class="flex items-end justify-between gap-4 flex-wrap">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800 mb-2">시연영상</h2>
+                        <p class="text-slate-700 leading-relaxed">
+                            실제 동작 흐름(프롬프트 입력 → 생성/적용 → 실행)을 녹화한 데모입니다.
+                        </p>
+                    </div>
+                    <button id="open-demo-btn-3"
+                            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg shadow-md">
+                        ▶ 전체 화면으로 보기
+                    </button>
+                </div>
+
+                <div class="mt-6 grid lg:grid-cols-2 gap-6 items-start">
+                    <div class="rounded-xl overflow-hidden border border-slate-200 shadow-sm">
+                        <!-- GitHub Pages에 올릴 때: assets/demo.mp4, assets/demo_poster.png -->
+                        <video class="w-full bg-black" controls preload="metadata" poster="assets/demo_poster.png">
+                            <source src="assets/demo.mp4" type="video/mp4">
+                            브라우저가 video 태그를 지원하지 않습니다. <a class="underline" href="assets/demo.mp4">영상 다운로드</a>
+                        </video>
+                    </div>
+                    <div class="p-6 rounded-xl border border-slate-200 bg-slate-50">
+                        <h3 class="text-lg font-bold text-slate-800 mb-3">영상에서 확인할 것</h3>
+                        <ul class="list-disc list-inside text-slate-700 space-y-2">
+                            <li><span class="font-semibold">입력</span>: 자연어 프롬프트로 기능 요청</li>
+                            <li><span class="font-semibold">분석</span>: 요구사항을 단계별 구조(스키마)로 정리</li>
+                            <li><span class="font-semibold">생성</span>: Unity C# 코드/템플릿 생성</li>
+                            <li><span class="font-semibold">적용</span>: 씬 오브젝트 생성 + 컴포넌트 부착</li>
+                            <li><span class="font-semibold">결과</span>: 바로 Play로 프로토타입 확인</li>
+                        </ul>
+                        <div class="mt-4 text-xs text-slate-500 leading-relaxed">
+                            TIP: GitHub Pages에서 영상이 안 뜨면 파일 경로(<span class="font-mono">assets/demo.mp4</span>)와 대소문자를 확인하세요.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. 발표자료(PPT) -->
+            <section id="presentation" class="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
+                <div class="flex items-end justify-between gap-4 flex-wrap">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800 mb-2">발표자료</h2>
+                        <p class="text-slate-700 leading-relaxed">
+                            프로젝트 배경, 시스템 구조, 주요 기능, 기대 효과를 정리한 발표 슬라이드입니다.
+                        </p>
+                    </div>
+                    <a href="assets/presentation.pdf" target="_blank" rel="noopener"
+                       class="bg-slate-900 hover:bg-slate-950 text-white font-semibold px-4 py-2 rounded-lg shadow-md">
+                        📄 PDF 열기
+                    </a>
+                </div>
+
+                <!-- Embedded PDF (works on most browsers) -->
+                <div class="mt-6 rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-slate-50">
+                    <iframe title="presentation"
+                            src="assets/presentation.pdf#view=FitH"
+                            class="w-full"
+                            style="height: 520px;">
+                    </iframe>
+                </div>
+
+                <!-- Slide gallery -->
+                <h3 class="text-lg font-bold text-slate-800 mt-8 mb-3">슬라이드 미리보기</h3>
+                <p class="text-sm text-slate-600 mb-4">
+                    아래 썸네일을 클릭하면 크게 볼 수 있습니다. (GitHub Pages: <span class="font-mono">assets/slides/</span> 폴더에 슬라이드 PNG 추가)
+                </p>
+
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <button class="slide-thumb text-left" data-src="assets/slides/slide-04.png" data-title="개발 배경">
+                        <img class="thumb w-full" src="assets/slides/slide-04.png" alt="개발 배경 슬라이드">
+                        <div class="mt-2 text-sm font-semibold text-slate-800">개발 배경</div>
+                        <div class="text-xs text-slate-500">반복 작업/시간 소모/창의력 제한</div>
+                    </button>
+                    <button class="slide-thumb text-left" data-src="assets/slides/slide-06.png" data-title="시스템 구조">
+                        <img class="thumb w-full" src="assets/slides/slide-06.png" alt="시스템 구조 슬라이드">
+                        <div class="mt-2 text-sm font-semibold text-slate-800">시스템 구조</div>
+                        <div class="text-xs text-slate-500">클라이언트 · 서버 · 연동 데이터</div>
+                    </button>
+                    <button class="slide-thumb text-left" data-src="assets/slides/slide-07.png" data-title="기획 및 콘텐츠 보조">
+                        <img class="thumb w-full" src="assets/slides/slide-07.png" alt="기획 및 콘텐츠 보조 슬라이드">
+                        <div class="mt-2 text-sm font-semibold text-slate-800">기획 및 콘텐츠 보조</div>
+                        <div class="text-xs text-slate-500">세계관/퀘스트/기획서 초안</div>
+                    </button>
+                    <button class="slide-thumb text-left" data-src="assets/slides/slide-08.png" data-title="프로그래밍 및 디버깅">
+                        <img class="thumb w-full" src="assets/slides/slide-08.png" alt="프로그래밍 및 디버깅 지원 슬라이드">
+                        <div class="mt-2 text-sm font-semibold text-slate-800">프로그래밍 & 디버깅</div>
+                        <div class="text-xs text-slate-500">에러 분석 · 템플릿 · 개선 제안</div>
+                    </button>
+                    <button class="slide-thumb text-left" data-src="assets/slides/slide-09.png" data-title="데이터 밸런싱">
+                        <img class="thumb w-full" src="assets/slides/slide-09.png" alt="데이터 밸런싱 자동화 슬라이드">
+                        <div class="mt-2 text-sm font-semibold text-slate-800">데이터 밸런싱</div>
+                        <div class="text-xs text-slate-500">분석/조정 + 템플릿 자동 생성</div>
+                    </button>
+                    <button class="slide-thumb text-left" data-src="assets/slides/slide-10.png" data-title="기대 효과">
+                        <img class="thumb w-full" src="assets/slides/slide-10.png" alt="기대 효과 슬라이드">
+                        <div class="mt-2 text-sm font-semibold text-slate-800">기대 효과</div>
+                        <div class="text-xs text-slate-500">시간 단축 · 집중도 · 협업 효율</div>
+                    </button>
+                </div>
+            </section>
+
+            <!-- 4. 핵심 아키텍처 -->
             <section id="architecture" class="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
-                <h1 class="text-2xl font-bold text-slate-800 mb-4 border-b pb-2">핵심 아키텍처</h1>
+                <h2 class="text-2xl font-bold text-slate-800 mb-4 border-b pb-2">핵심 아키텍처</h2>
                 <p class="text-slate-700 leading-relaxed mb-8">
-                    프로젝트의 핵심은 사용자 프롬프트가 실제 Unity 씬 구성 요소로 변환되는 3단계 워크플로우에 있습니다. 각 단계를 클릭하여 AI의 역할과 데이터 흐름을 상세하게 확인하십시오.
+                    프로젝트의 핵심은 사용자 프롬프트가 실제 Unity 씬 구성 요소로 변환되는 워크플로우에 있습니다.
+                    각 단계를 클릭하여 AI의 역할과 데이터 흐름을 확인할 수 있습니다.
                 </p>
 
                 <!-- Interactive Flow Diagram -->
@@ -180,11 +397,17 @@
                 <div id="architecture-detail-panel" class="bg-slate-50 p-6 rounded-lg border border-slate-300 min-h-[200px]">
                     <div id="detail-0" class="detail-content">
                         <h3 class="text-xl font-bold text-slate-800">프롬프트 입력</h3>
-                        <p class="text-slate-700 mt-2">사용자가 원하는 게임 아이디어를 자연어(예: "토끼가 당근을 모으는 2D 플랫포머 게임")로 입력하는 단계입니다. 이 입력이 전체 프로세스의 시발점입니다.</p>
+                        <p class="text-slate-700 mt-2">
+                            사용자가 원하는 게임 아이디어를 자연어(예: "토끼가 당근을 모으는 2D 플랫포머")로 입력합니다.
+                            이 입력이 전체 프로세스의 시발점입니다.
+                        </p>
                     </div>
                     <div id="detail-1" class="detail-content" hidden>
                         <h3 class="text-xl font-bold text-blue-700">A. 프롬프트 분석 및 JSON 구조화 (LLM)</h3>
-                        <p class="text-slate-700 mt-2">LLM은 프롬프트를 분석하여 게임 타입, 핵심 메커니즘, 필요한 에셋을 포함하는 <span class="font-mono font-semibold">JSON 스키마</span>로 변환합니다. 이는 후속 단계의 입력으로 사용되는 구조화된 데이터입니다.</p>
+                        <p class="text-slate-700 mt-2">
+                            LLM이 프롬프트를 분석하여 게임 타입, 핵심 메커니즘, 필요한 에셋/스크립트를 포함하는
+                            <span class="font-mono font-semibold">JSON 스키마</span>로 변환합니다.
+                        </p>
                         <p class="font-semibold text-sm mt-3 mb-1">JSON 스키마 예시:</p>
                         <pre class="code-block text-xs"><code>{
   "gameType": "2D Platformer",
@@ -196,35 +419,100 @@
                     </div>
                     <div id="detail-2" class="detail-content" hidden>
                         <h3 class="text-xl font-bold text-blue-700">B. C# 스크립트 생성 (LLM)</h3>
-                        <p class="text-slate-700 mt-2">이전 단계에서 생성된 JSON의 `mechanics` 목록을 기반으로, LLM이 Unity의 <span class="font-mono font-semibold">MonoBehaviour</span>를 상속하는 완벽한 C# 스크립트 코드를 생성합니다. 코드에는 주석과 필수 `public` 변수들이 포함됩니다.</p>
+                        <p class="text-slate-700 mt-2">
+                            JSON의 <span class="font-mono font-semibold">mechanics</span> 목록을 기반으로
+                            Unity의 <span class="font-mono font-semibold">MonoBehaviour</span>를 상속하는 C# 스크립트를 생성합니다.
+                        </p>
                         <p class="font-semibold text-sm mt-3 mb-1">스크립트 요구사항:</p>
                         <ul class="list-disc list-inside text-sm text-slate-700">
-                            <li>Unity 표준 함수(`Start`, `Update`) 구현</li>
+                            <li>Unity 표준 함수(Start/Update) 구현</li>
                             <li>정확한 문법 및 Unity API 사용</li>
+                            <li>필요 변수(public) 및 주석 포함</li>
                         </ul>
                     </div>
                     <div id="detail-3" class="detail-content" hidden>
                         <h3 class="text-xl font-bold text-blue-700">C. Unity 통합 프레임워크 (개발자 영역)</h3>
-                        <p class="text-slate-700 mt-2">개발자가 미리 구축한 프레임워크가 AI가 생성한 C# 파일을 프로젝트 폴더에 저장하고, Unity 씬에 필요한 게임 오브젝트를 자동으로 생성한 뒤, 해당 오브젝트에 스크립트를 <span class="font-mono font-semibold">AddComponent</span> 합니다.</p>
+                        <p class="text-slate-700 mt-2">
+                            AI가 생성한 C# 파일을 프로젝트 폴더에 저장하고, Unity 씬에 필요한 오브젝트를 생성한 뒤,
+                            해당 오브젝트에 스크립트를 <span class="font-mono font-semibold">AddComponent</span>로 자동 부착합니다.
+                        </p>
                         <p class="font-semibold text-sm mt-3 mb-1">주요 기능:</p>
                         <ul class="list-disc list-inside text-sm text-slate-700">
                             <li>스크립트 파일 시스템 통합</li>
                             <li>씬 오브젝트 자동 생성 및 컴포넌트 부착</li>
+                            <li>에러 로그 기반 피드백(디버그 탭)</li>
                         </ul>
                     </div>
                     <div id="detail-4" class="detail-content" hidden>
                         <h3 class="text-xl font-bold text-emerald-600">Unity Game 실행</h3>
-                        <p class="text-slate-700 mt-2">모든 스크립트와 씬 구성이 완료되면, 사용자는 Unity 에디터에서 즉시 프로토타입 게임을 실행하여 프롬프트의 결과물을 확인할 수 있습니다.</p>
+                        <p class="text-slate-700 mt-2">
+                            모든 스크립트와 씬 구성이 완료되면, Unity 에디터에서 즉시 프로토타입 게임을 실행하여 결과를 확인합니다.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. 기술 스택 -->
+            <section id="tech" class="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4 border-b pb-2">기술 스택</h2>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="p-6 rounded-xl border border-slate-200 bg-slate-50">
+                        <h3 class="text-lg font-bold text-slate-800 mb-3">Unity / 클라이언트</h3>
+                        <ul class="list-disc list-inside text-slate-700 space-y-2">
+                            <li>Unity Editor 확장 (EditorWindow 기반 UI)</li>
+                            <li>C# 자동 생성 및 파일 저장/컴파일 흐름</li>
+                            <li>씬 오브젝트 자동 생성 + 컴포넌트 부착(AddComponent)</li>
+                            <li>결과 확인을 위한 즉시 실행(Play) 프로세스</li>
+                        </ul>
+                    </div>
+                    <div class="p-6 rounded-xl border border-slate-200 bg-slate-50">
+                        <h3 class="text-lg font-bold text-slate-800 mb-3">AI / 서버 & 데이터</h3>
+                        <ul class="list-disc list-inside text-slate-700 space-y-2">
+                            <li>LLM API 기반 프롬프트 엔진(분석 → 구조화 → 생성)</li>
+                            <li>JSON 스키마를 통한 안정적인 데이터 전달</li>
+                            <li>기획 문서/코드 조각/로그/CSV 등 개발 데이터 연동(확장 방향)</li>
+                            <li>GitHub Pages로 포트폴리오 배포</li>
+                        </ul>
                     </div>
                 </div>
 
+                <div class="mt-6 p-6 rounded-xl border border-emerald-200 bg-emerald-50">
+                    <h3 class="text-lg font-bold text-emerald-800 mb-2">주요 기능(발표자료 기반)</h3>
+                    <div class="grid lg:grid-cols-3 gap-4 mt-4">
+                        <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+                            <div class="text-sm font-semibold text-slate-900">기획 & 콘텐츠 보조</div>
+                            <ul class="mt-2 text-sm text-slate-700 list-disc list-inside space-y-1">
+                                <li>세계관/스토리 초안 생성</li>
+                                <li>퀘스트/이벤트 아이디어 제안</li>
+                                <li>게임 기획서 초안 자동 작성</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+                            <div class="text-sm font-semibold text-slate-900">프로그래밍 & 디버깅</div>
+                            <ul class="mt-2 text-sm text-slate-700 list-disc list-inside space-y-1">
+                                <li>에러 로그 분석 및 원인 추정</li>
+                                <li>자주 쓰는 코드 템플릿 생성</li>
+                                <li>코드 개선(improvement) 제안</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+                            <div class="text-sm font-semibold text-slate-900">데이터 밸런싱 자동화</div>
+                            <ul class="mt-2 text-sm text-slate-700 list-disc list-inside space-y-1">
+                                <li>스탯/테이블 분석 및 조정안 제시</li>
+                                <li>아이템/스킬 CSV·JSON 템플릿 생성</li>
+                                <li>입력 오류 감소 & 일관성 유지</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </section>
-            
-            <!-- 3. 개발 로드맵 -->
+
+            <!-- 6. 개발 로드맵 -->
             <section id="roadmap" class="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
-                <h1 class="text-2xl font-bold text-slate-800 mb-4 border-b pb-2">개발 로드맵</h1>
+                <h2 class="text-2xl font-bold text-slate-800 mb-4 border-b pb-2">개발 로드맵</h2>
                 <p class="text-slate-700 leading-relaxed mb-6">
-                    프로젝트는 3단계의 명확한 목표를 가지고 진행됩니다. 각 단계의 제목을 클릭하여 상세 목표와 결과물을 확인하십시오.
+                    프로젝트는 3단계의 목표로 진행됩니다. 각 단계 제목을 클릭하여 상세 목표와 결과물을 확인하세요.
                 </p>
 
                 <div class="space-y-4">
@@ -237,8 +525,8 @@
                         <div class="roadmap-content p-4 border-t border-slate-200" id="phase-1-content" hidden>
                             <h4 class="font-bold text-blue-600 mb-2">핵심 목표</h4>
                             <ul class="list-disc list-inside space-y-1 text-slate-700 text-sm">
-                                <li>가장 기본적인 단일 스크립트 생성 및 적용 파이프라인 완성.</li>
-                                <li>결과물: 큐브가 좌우로 움직이는 것을 확인할 수 있는 가장 간단한 게임.</li>
+                                <li>단일 스크립트 생성 및 적용 파이프라인 완성</li>
+                                <li>결과물: 큐브가 좌우로 움직이는 간단한 게임</li>
                             </ul>
                         </div>
                     </div>
@@ -252,8 +540,8 @@
                         <div class="roadmap-content p-4 border-t border-slate-200" id="phase-2-content" hidden>
                             <h4 class="font-bold text-blue-600 mb-2">핵심 목표</h4>
                             <ul class="list-disc list-inside space-y-1 text-slate-700 text-sm">
-                                <li>두 개 이상의 스크립트 상호작용 및 에셋 플레이스홀더 처리 구현.</li>
-                                <li>결과물: 점수 획득 기능이 있는 기본 프로토타입 게임.</li>
+                                <li>두 개 이상의 스크립트 상호작용 및 에셋 플레이스홀더 처리</li>
+                                <li>결과물: 점수 획득 기능이 있는 기본 프로토타입 게임</li>
                             </ul>
                         </div>
                     </div>
@@ -267,8 +555,8 @@
                         <div class="roadmap-content p-4 border-t border-slate-200" id="phase-3-content" hidden>
                             <h4 class="font-bold text-blue-600 mb-2">핵심 목표</h4>
                             <ul class="list-disc list-inside space-y-1 text-slate-700 text-sm">
-                                <li>Unity 에디터 내에서 프롬프트를 입력 및 결과 확인이 가능한 커스텀 UI 개발.</li>
-                                <li>결과물: 'ChatGPT처럼' 아이디어를 바로 입력하고 게임을 생성할 수 있는 완벽한 UX/UI.</li>
+                                <li>Unity 에디터 내 프롬프트 입력/결과 확인 커스텀 UI 개발</li>
+                                <li>결과물: 아이디어를 입력하면 즉시 게임을 생성하는 UX</li>
                             </ul>
                         </div>
                     </div>
@@ -282,26 +570,56 @@
         <p class="text-sm">© 2025 Ahn Hyunwoong. Powered by Generative AI.</p>
     </footer>
 
+    <!-- Video Modal -->
+    <div id="demo-modal" class="modal-overlay" hidden>
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="font-semibold">데모 영상</div>
+                <button id="close-demo-btn" class="px-3 py-1 rounded-md bg-white/10 hover:bg-white/20">닫기 ✕</button>
+            </div>
+            <div class="modal-body">
+                <video id="demo-modal-video" class="w-full rounded-lg bg-black" controls preload="metadata" poster="assets/demo_poster.png">
+                    <source src="assets/demo.mp4" type="video/mp4">
+                </video>
+                <div class="text-xs text-slate-300 mt-2">
+                    전체화면(⛶)을 눌러 발표용으로 재생할 수 있습니다.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide Modal -->
+    <div id="slide-modal" class="modal-overlay" hidden>
+        <div class="modal-card">
+            <div class="modal-header">
+                <div id="slide-modal-title" class="font-semibold">슬라이드</div>
+                <button id="close-slide-btn" class="px-3 py-1 rounded-md bg-white/10 hover:bg-white/20">닫기 ✕</button>
+            </div>
+            <div class="modal-body">
+                <img id="slide-modal-img" class="w-full rounded-lg" alt="slide preview">
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
             // --- 아키텍처 다이어그램 상호작용 로직 ---
             const flowIcons = document.querySelectorAll('.flow-step-icon');
-            const detailPanel = document.getElementById('architecture-detail-panel');
 
             // 초기 상태 설정
-            document.getElementById('detail-0').style.display = 'block';
-            document.querySelector('.flow-step-icon[data-step="0"]').classList.add('active');
+            const firstDetail = document.getElementById('detail-0');
+            if (firstDetail) firstDetail.style.display = 'block';
+            const firstIcon = document.querySelector('.flow-step-icon[data-step="0"]');
+            if (firstIcon) firstIcon.classList.add('active');
 
             flowIcons.forEach(icon => {
                 icon.addEventListener('click', () => {
                     const step = icon.dataset.step;
 
-                    // 아이콘 활성화 상태 초기화 및 설정
                     flowIcons.forEach(i => i.classList.remove('active'));
                     icon.classList.add('active');
 
-                    // 상세 내용 패널 업데이트
                     document.querySelectorAll('.detail-content').forEach(content => {
                         content.style.display = 'none';
                     });
@@ -321,7 +639,7 @@
                     const phase = toggle.dataset.phase;
                     const content = document.getElementById(`phase-${phase}-content`);
                     const icon = toggle.querySelector('.toggle-icon');
-                    
+
                     const isHidden = content.hasAttribute('hidden');
 
                     if (isHidden) {
@@ -336,6 +654,68 @@
                         toggle.classList.add('rounded-t-lg');
                     }
                 });
+            });
+
+            // --- 데모 영상 모달 ---
+            const demoModal = document.getElementById('demo-modal');
+            const demoVideo = document.getElementById('demo-modal-video');
+            const openDemoBtns = [
+                document.getElementById('open-demo-btn'),
+                document.getElementById('open-demo-btn-2'),
+                document.getElementById('open-demo-btn-3'),
+            ].filter(Boolean);
+            const closeDemoBtn = document.getElementById('close-demo-btn');
+
+            const openDemo = () => {
+                demoModal.removeAttribute('hidden');
+                // Auto-play is often blocked; keep user-driven play.
+                demoVideo.currentTime = 0;
+                demoVideo.focus();
+            };
+
+            const closeDemo = () => {
+                demoVideo.pause();
+                demoModal.setAttribute('hidden', 'true');
+            };
+
+            openDemoBtns.forEach(btn => btn.addEventListener('click', openDemo));
+            closeDemoBtn.addEventListener('click', closeDemo);
+            demoModal.addEventListener('click', (e) => {
+                if (e.target === demoModal) closeDemo();
+            });
+
+            // --- 슬라이드 모달 ---
+            const slideModal = document.getElementById('slide-modal');
+            const slideImg = document.getElementById('slide-modal-img');
+            const slideTitle = document.getElementById('slide-modal-title');
+            const closeSlideBtn = document.getElementById('close-slide-btn');
+
+            document.querySelectorAll('.slide-thumb').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const src = btn.dataset.src;
+                    const title = btn.dataset.title || '슬라이드';
+                    slideImg.src = src;
+                    slideTitle.textContent = title;
+                    slideModal.removeAttribute('hidden');
+                });
+            });
+
+            const closeSlide = () => {
+                slideModal.setAttribute('hidden', 'true');
+                slideImg.src = '';
+            };
+
+            closeSlideBtn.addEventListener('click', closeSlide);
+            slideModal.addEventListener('click', (e) => {
+                if (e.target === slideModal) closeSlide();
+            });
+
+            // ESC로 모달 닫기
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (!demoModal.hasAttribute('hidden')) closeDemo();
+                    if (!slideModal.hasAttribute('hidden')) closeSlide();
+                }
             });
         });
     </script>
